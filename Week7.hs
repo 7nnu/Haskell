@@ -178,3 +178,24 @@ leaves :: Tree -> [Int]
 leaves Null = []
 leaves (Node n Null Null) = [n]
 leaves (Node _ left right) = leaves left ++ leaves right
+
+inOrder :: Tree -> [Int]
+inOrder Null = []
+inOrder (Node x left right) =
+  inOrder left ++ [x] ++ inOrder right
+
+insert :: Int -> Tree -> Tree
+insert x Null = Node x Null Null
+insert x (Node y left right)
+  | x < y     = Node y (insert x left) right
+  | x > y     = Node y left (insert x right)
+  | otherwise = Node y left right
+
+listToSearchTree :: [Int] -> Tree
+listToSearchTree [] = Null
+listToSearchTree (x:xs) =
+  foldl (flip insert) (Node x Null Null) xs
+
+binaryTreeSort :: [Int] -> [Int]
+binaryTreeSort xs =
+  inOrder (listToSearchTree xs)
